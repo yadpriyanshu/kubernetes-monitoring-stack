@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: flask-demo-alerts
+  namespace: default
+  labels:
+    release: monitoring
+spec:
+  groups:
+  - name: flask-demo
+    rules:
+    - alert: AppHighLatency
+      expr: rate(request_latency_seconds[5m]) > 0.5
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: High request latency
+    - alert: AppHighMemory
+      expr: container_memory_usage_bytes{container="flask-demo"} > 0.8 * container_memory_working_set_bytes{container="flask-demo"}
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: High memory usage
+    - alert: AppCrash
+      expr: changes(kube_pod_container_status_restarts{container="flask-demo"}[5m]) > 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: App pod crashed

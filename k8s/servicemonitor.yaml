@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: flask-demo-monitor
+  namespace: default  # Assuming app is in default namespace
+  labels:
+    release: monitoring  # Must match the Prometheus instance label
+spec:
+  selector:
+    matchLabels:
+      app: flask-demo  # Matches the service labels
+  endpoints:
+  - port: '5000'  # Service port name or number
+    path: /metrics
+    interval: 15s
