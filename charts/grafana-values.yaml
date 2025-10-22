@@ -6,7 +6,6 @@ grafana:
     annotations:
       cloud.google.com/load-balancer-type: "External"
   
-  # ✅ SECURE: Use existing secret
   admin:
     existingSecret: grafana-admin-secret
     userKey: admin-user
