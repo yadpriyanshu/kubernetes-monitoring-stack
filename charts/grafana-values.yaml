@@ -1,0 +1,44 @@
+grafana:
+  enabled: true
+  service:
+    type: LoadBalancer
+    port: 80
+    annotations:
+      cloud.google.com/load-balancer-type: "External"
+  
+  # ✅ SECURE: Use existing secret
+  admin:
+    existingSecret: grafana-admin-secret
+    userKey: admin-user
+    passwordKey: admin-password
+  
+  # Optional: Persistence
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: "standard"
+
+# Prometheus LoadBalancer
+prometheus:
+  kubePrometheus:
+    prometheus:
+      service:
+        type: LoadBalancer
+        port: 9090
+        annotations:
+          cloud.google.com/load-balancer-type: "External"
+
+# Alertmanager LoadBalancer
+alertmanager:
+  enabled: true
+  service:
+    type: LoadBalancer
+    port: 9093
+    annotations:
+      cloud.google.com/load-balancer-type: "External"
+
+# Allow ServiceMonitors from all namespaces
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
